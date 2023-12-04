@@ -1,0 +1,40 @@
+<!-- public/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pagination Demo</title>
+  </head>
+  <body>
+    <div id="content"></div>
+    <button onclick="loadPage('previous')">Previous</button>
+    <button onclick="loadPage('next')">Next</button>
+
+    <script>
+      let currentPage = 1;
+
+      async function loadPage(direction) {
+        if (direction === "next") {
+          console.log("next hit");
+          currentPage++;
+        } else if (direction === "previous" && currentPage > 1) {
+          currentPage--;
+        }
+
+        const response = await fetch(
+          `http://localhost:3000/api/pages/${currentPage}`
+        );
+        const data = await response.json();
+        const contentDiv = document.getElementById("content");
+        contentDiv.innerHTML = data
+          .map((page) => `<p>${page.content}</p>`)
+          .join("");
+      }
+
+      // Initial page load
+      loadPage("next");
+    </script>
+  </body>
+</html>
